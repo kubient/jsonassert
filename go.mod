@@ -1,1 +1,3 @@
-module github.com/kinbiko/jsonassert
+module github.com/kubient/jsonassert
+
+go 1.16
