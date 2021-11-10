@@ -96,6 +96,18 @@ func TestUnorderedArray(t *testing.T) {
 }
 ```
 
+### Regular expression
+
+For example:
+
+```go
+func TestRegEx(t *testing.T) {
+    ja := jsonassert.New(t)
+    payload := `{"foo": 1234}`,
+    ja.Assertf(payload, `{"foo": "<<<^\\d{4}$>>>"}`,)                 
+}
+```
+
 ## Docs
 
 You can find the [GoDocs for this package here](https://pkg.go.dev/github.com/kinbiko/jsonassert).
