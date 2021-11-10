@@ -141,6 +141,76 @@ func TestAssertf(t *testing.T) {
 				t.Run(name, func(t *testing.T) { tc.check(t) })
 			}
 		})
+
+		t.Run("with REGULAR EXPRESSION directives", func(t *testing.T) {
+			for name, tc := range map[string]*testCase{
+				"presence against null": {
+					`{"foo": "null"}`,
+					`{"foo": "<<<null>>>"}`,
+					nil,
+				},
+				"presence against null fail": {
+					`{"foo": "null"}`,
+					`{"foo": "<<<hacker>>>"}`,
+					[]string{`does not match by pattern: '<<<hacker>>>' with: 'null' path: '$.foo'`},
+				},
+				"presence against boolean": {
+					`{"foo": true}`,
+					`{"foo": "<<<^true$>>>"}`,
+					nil,
+				},
+				"presence against boolean fail": {
+					`{"foo": true}`,
+					`{"foo": "<<<^trues$>>>"}`,
+					[]string{`does not match by pattern: '<<<^trues$>>>' with: 'true' path: '$.foo'`},
+				},
+				"presence against number": {
+					`{"foo": 1234}`,
+					`{"foo": "<<<^\\d{4}$>>>"}`,
+					nil,
+				},
+				"presence against number fail": {
+					`{"foo": 1234}`,
+					`{"foo": "<<<^\\d{3}$>>>"}`,
+					[]string{`does not match by pattern: '<<<^\d{3}$>>>' with: '1234' path: '$.foo'`},
+				},
+				"presence against string": {
+					`{"foo": "hello world"}`,
+					`{"foo": "<<<\\s+>>>"}`,
+					nil,
+				},
+				"presence against string fail": {
+					`{"foo": "hello world"}`,
+					`{"foo": "<<<\\d+>>>"}`,
+					[]string{`does not match by pattern: '<<<\d+>>>' with: 'hello world' path: '$.foo'`},
+				},
+				"presence against object": {
+					`{"foo": {"bar": "baz"}}`,
+					`{"foo": {"bar": "<<<baz>>>"}}`,
+					nil,
+				},
+				"presence against object fail": {
+					`{"foo": {"bar": "baz"}}`,
+					`{"foo": {"bar": "<<<bazzz>>>"}}`,
+					[]string{`does not match by pattern: '<<<bazzz>>>' with: 'baz' path: '$.foo.bar'`},
+				},
+				"presence against array": {
+					`{"foo": ["bar", "baz"]}`,
+					`{"foo": ["<<<^bar$>>>", "<<<^baz$>>>"]}`,
+					nil,
+				},
+				"presence against array fail": {
+					`{"foo": ["bar ", "baz "]}`,
+					`{"foo": ["<<<^bar$>>>", "<<<^baz$>>>"]}`,
+					[]string{
+						`does not match by pattern: '<<<^bar$>>>' with: 'bar ' path: '$.foo[0]'`,
+						`does not match by pattern: '<<<^baz$>>>' with: 'baz ' path: '$.foo[1]'`,
+					},
+				},
+			} {
+				t.Run(name, func(t *testing.T) { tc.check(t) })
+			}
+		})
 	})
 
 	t.Run("arrays", func(t *testing.T) {
