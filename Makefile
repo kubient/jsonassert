@@ -33,3 +33,6 @@ release: ## Make release and push to Github with tag
 	git commit -m "bumped to version $(RUN_ARGS)" ./CHANGELOG.md
 	git tag -a $(RUN_ARGS) -m "version $(RUN_ARGS)"
 	git push --atomic origin master  $(RUN_ARGS)
+
+test: ## Run tests
+	go clean -testcache && go test -v ./...
