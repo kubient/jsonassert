@@ -25,12 +25,12 @@ func (a *Asserter) checkString(path, act, exp string) {
 
 		matched, err := regexp.MatchString(regex, act)
 		if err != nil {
-			a.tt.Errorf("error on matching: '%v' with: '%v' in path: %v", exp, act, path)
+			a.tt.Errorf("error on matching: '%v' with: '%v' in path: '%v'", exp, act, path)
 			return
 		}
 
 		if !matched {
-			a.tt.Errorf("does not match by pattern: '%v' with: '%v' path: %v'", exp, act, path)
+			a.tt.Errorf("does not match by pattern: '%v' with: '%v' path: '%v'", exp, act, path)
 		}
 
 	} else {

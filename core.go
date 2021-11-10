@@ -31,10 +31,30 @@ func (a *Asserter) pathassertf(path, act, exp string) {
 		return
 	}
 
+	// check for reg ex
+	if expType == jsonString {
+
+		expString, _ := extractString(exp)
+
+		if yes, err := isRegEx(expString); err == nil && yes {
+
+			var actString string
+			if actType == jsonString {
+				actString, _ = extractString(act)
+			} else {
+				actString = act
+			}
+
+			a.checkString(path, actString, expString)
+			return
+		}
+	}
+
 	if actType != expType {
 		a.tt.Errorf("actual JSON (%s) and expected JSON (%s) were of different types at '%s'", actType, expType, path)
 		return
 	}
+
 	switch actType {
 	case jsonBoolean:
 		actBool, _ := extractBoolean(act)
