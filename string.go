@@ -57,7 +57,7 @@ func extractString(s string) (string, error) {
 	return str, err
 }
 
-const regExField = `^<<<(.+)>>>$`
+const regExField = `^<<(.+)>>$`
 
 func isRegEx(str string) (bool, error) {
 	return regexp.MatchString(regExField, str)
