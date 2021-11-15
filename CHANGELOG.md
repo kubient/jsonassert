@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+## [v1.1.3] - 2021-11-15
+- change reg ex pattern tag
+
 ## [v1.1.2] - 2021-11-10
 - fix reg ex bug
 - added reg ex integration tests
